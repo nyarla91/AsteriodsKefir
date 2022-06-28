@@ -1,14 +1,13 @@
 ﻿using System;
 using Model.Bullets;
-using UnityEngine;
 
 namespace Model
 {
     public class PlayerAttack : IFixedUpdatable
     {
-        private const float CannonPeriod = 0.5f;
-        private const int LaserCharges = 3;
-        private const float LaserChargesRestorationSpeed = 0.3f; // charges/second
+        private float _cannonPeriod = 0.5f;
+        private int _laserCharges = 3;
+        private float _laserChargesRestorationSpeed = 0.3f; // charges/second
         
         private readonly PlayerMovement _movement;
         private Bullet[] _weapons;
@@ -24,14 +23,20 @@ namespace Model
             _movement = movement;
         }
 
+        public void UpdateStats(float cannonPeriod, int laserCharges, float laserChargesRestorationSpeed)
+        {
+            _cannonPeriod = cannonPeriod;
+            _laserCharges = laserCharges;
+            _laserChargesRestorationSpeed = laserChargesRestorationSpeed;
+        }
+
         public void FixedUpdate(float deltaTime)
         {
-            Debug.Log(_laserChargesLeft);
             if (_isCannonShooting)
                 ShootCannon();
             _cannonCooldownLeft = Math.Max(_cannonCooldownLeft - deltaTime, 0);
 
-            _laserChargesLeft = Math.Min(_laserChargesLeft + LaserChargesRestorationSpeed * deltaTime, LaserCharges);
+            _laserChargesLeft = Math.Min(_laserChargesLeft + _laserChargesRestorationSpeed * deltaTime, _laserCharges);
         }
 
         public void StartCannonShooting() => _isCannonShooting = true;
@@ -53,7 +58,7 @@ namespace Model
                 return;
             
             OnShoot?.Invoke(new CannonBullet(_movement.Position, _movement.Rotation));
-            _cannonCooldownLeft = CannonPeriod;
+            _cannonCooldownLeft = _cannonPeriod;
         }
     }
 }
