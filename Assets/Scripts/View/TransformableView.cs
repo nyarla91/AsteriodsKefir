@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace View
 {
-    public abstract class TransformableView<TModel> : MonoBehaviour where TModel : Transformable
+    public abstract class TransformableView<TModel> : FixedUpdaterView where TModel : Transformable
     {
         private Transform _transform;
         public Transform Transform => _transform ??= transform;
@@ -17,6 +17,9 @@ namespace View
             get => _model;
             set
             {
+                if (_model != null)
+                    throw new Exception("Model can only be set once");
+                
                 _model = value;
                 _model.OnTransformed += ApplyTransform;
             }
