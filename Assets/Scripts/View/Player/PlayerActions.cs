@@ -46,6 +46,24 @@ namespace View.Player
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""CannonShoot"",
+                    ""type"": ""Button"",
+                    ""id"": ""1082feb0-4b9c-47e8-9263-7335c1863053"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LaserShoot"",
+                    ""type"": ""Button"",
+                    ""id"": ""6409e767-246a-4296-9390-2b80947c8b06"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -92,6 +110,28 @@ namespace View.Player
                     ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f0c4185d-f528-40eb-b29c-2f8c107d50d7"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CannonShoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e09f56cd-8565-4baf-bd78-43df2363e7d9"",
+                    ""path"": ""<Keyboard>/alt"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LaserShoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -114,6 +154,8 @@ namespace View.Player
             m_Gameplay = asset.FindActionMap("Gameplay", throwIfNotFound: true);
             m_Gameplay_Accelerate = m_Gameplay.FindAction("Accelerate", throwIfNotFound: true);
             m_Gameplay_Rotate = m_Gameplay.FindAction("Rotate", throwIfNotFound: true);
+            m_Gameplay_CannonShoot = m_Gameplay.FindAction("CannonShoot", throwIfNotFound: true);
+            m_Gameplay_LaserShoot = m_Gameplay.FindAction("LaserShoot", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -175,12 +217,16 @@ namespace View.Player
         private IGameplayActions m_GameplayActionsCallbackInterface;
         private readonly InputAction m_Gameplay_Accelerate;
         private readonly InputAction m_Gameplay_Rotate;
+        private readonly InputAction m_Gameplay_CannonShoot;
+        private readonly InputAction m_Gameplay_LaserShoot;
         public struct GameplayActions
         {
             private @PlayerActions m_Wrapper;
             public GameplayActions(@PlayerActions wrapper) { m_Wrapper = wrapper; }
             public InputAction @Accelerate => m_Wrapper.m_Gameplay_Accelerate;
             public InputAction @Rotate => m_Wrapper.m_Gameplay_Rotate;
+            public InputAction @CannonShoot => m_Wrapper.m_Gameplay_CannonShoot;
+            public InputAction @LaserShoot => m_Wrapper.m_Gameplay_LaserShoot;
             public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -196,6 +242,12 @@ namespace View.Player
                     @Rotate.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRotate;
                     @Rotate.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRotate;
                     @Rotate.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRotate;
+                    @CannonShoot.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnCannonShoot;
+                    @CannonShoot.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnCannonShoot;
+                    @CannonShoot.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnCannonShoot;
+                    @LaserShoot.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLaserShoot;
+                    @LaserShoot.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLaserShoot;
+                    @LaserShoot.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLaserShoot;
                 }
                 m_Wrapper.m_GameplayActionsCallbackInterface = instance;
                 if (instance != null)
@@ -206,6 +258,12 @@ namespace View.Player
                     @Rotate.started += instance.OnRotate;
                     @Rotate.performed += instance.OnRotate;
                     @Rotate.canceled += instance.OnRotate;
+                    @CannonShoot.started += instance.OnCannonShoot;
+                    @CannonShoot.performed += instance.OnCannonShoot;
+                    @CannonShoot.canceled += instance.OnCannonShoot;
+                    @LaserShoot.started += instance.OnLaserShoot;
+                    @LaserShoot.performed += instance.OnLaserShoot;
+                    @LaserShoot.canceled += instance.OnLaserShoot;
                 }
             }
         }
@@ -223,6 +281,8 @@ namespace View.Player
         {
             void OnAccelerate(InputAction.CallbackContext context);
             void OnRotate(InputAction.CallbackContext context);
+            void OnCannonShoot(InputAction.CallbackContext context);
+            void OnLaserShoot(InputAction.CallbackContext context);
         }
     }
 }

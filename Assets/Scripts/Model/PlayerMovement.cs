@@ -13,25 +13,17 @@ namespace Model
         private readonly Vector2 _cameraMaxBounds;
         private readonly Vector2 _cameraMinBounds;
         
-        private bool _accelerating;
+        private bool _isAccelerating;
         private Vector2 _velocity;
-        private Vector2 Facing
-        {
-            get
-            {
-                const double DegreesToRadians = Math.PI / 180;
-                return new Vector2((float) Math.Cos(Rotation * DegreesToRadians), (float) Math.Sin(Rotation * DegreesToRadians));
-            }
-        }
 
-        public PlayerMovement(Vector2 position, Vector2 scale, float rotation, Vector2 cameraMaxBounds, Vector2 cameraMinBounds) : base(position, scale, rotation)
+        public PlayerMovement(Vector2 position, float rotation, Vector2 cameraMaxBounds, Vector2 cameraMinBounds) : base(position, rotation)
         {
             _cameraMaxBounds = cameraMaxBounds;
             _cameraMinBounds = cameraMinBounds;
         }
 
-        public void StartAcceleration() => _accelerating = true;
-        public void EndAcceleration() => _accelerating = false;
+        public void StartAcceleration() => _isAccelerating = true;
+        public void EndAcceleration() => _isAccelerating = false;
 
         public void Rotate(float deltaTime, float axis) => Rotation += axis * RotationSpeed * deltaTime;
 
@@ -42,8 +34,8 @@ namespace Model
 
         private void Move(float deltaTime)
         {
-            float t = _accelerating ? Acceleration : Deacceleration;
-            Vector2 targetVelocity = _accelerating ? (MovementSpeed * deltaTime * Facing) : Vector2.Zero;
+            float t = _isAccelerating ? Acceleration : Deacceleration;
+            Vector2 targetVelocity = _isAccelerating ? (MovementSpeed * deltaTime * Facing) : Vector2.Zero;
             _velocity = Vector2.Lerp(_velocity, targetVelocity, t);
 
             Position += _velocity;

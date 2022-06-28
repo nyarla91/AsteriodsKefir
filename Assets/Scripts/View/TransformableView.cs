@@ -28,13 +28,13 @@ namespace View
         public void ApplyTransform(Transformable transformable)
         {
             Transform.localPosition = transformable.Position.ToUnityVector();
-            Transform.localScale = transformable.Scale.ToUnityVector();
             Transform.rotation = Quaternion.Euler(0, 0, transformable.Rotation);
         }
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             _model.OnTransformed -= ApplyTransform;
+            _model = null;
         }
     }
 }

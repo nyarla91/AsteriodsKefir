@@ -1,15 +1,19 @@
-﻿using Model;
+﻿using System.Collections.Generic;
+using Model;
 using UnityEngine;
 
 namespace View
 {
     public class FixedUpdaterView : MonoBehaviour
     {
-        protected IFixedUpdatable fixedUpdatable;
+        protected List<IFixedUpdatable> fixedUpdatables = new List<IFixedUpdatable>();
 
         protected virtual void FixedUpdate()
         {
-            fixedUpdatable?.FixedUpdate(Time.fixedDeltaTime);
+            foreach (IFixedUpdatable fixedUpdatable in fixedUpdatables)
+            {
+                fixedUpdatable?.FixedUpdate(Time.fixedDeltaTime);
+            }
         }
     }
 }

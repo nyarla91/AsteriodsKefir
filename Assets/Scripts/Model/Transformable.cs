@@ -20,16 +20,6 @@ namespace Model
             }
         }
 
-        public Vector2 Scale
-        {
-            get => _scale;
-            set
-            {
-                _scale = value;
-                OnTransformed?.Invoke(this);
-            }
-        }
-
         public float Rotation
         {
             get => _rotation;
@@ -39,13 +29,21 @@ namespace Model
                 OnTransformed?.Invoke(this);
             }
         }
+        
+        protected Vector2 Facing
+        {
+            get
+            {
+                const double DegreesToRadians = Math.PI / 180;
+                return new Vector2((float) Math.Cos(Rotation * DegreesToRadians), (float) Math.Sin(Rotation * DegreesToRadians));
+            }
+        }
 
         public event Action<Transformable> OnTransformed;
 
-        public Transformable(Vector2 position, Vector2 scale, float rotation)
+        public Transformable(Vector2 position, float rotation)
         {
             Position = position;
-            Scale = scale;
             Rotation = rotation;
         }
     }
