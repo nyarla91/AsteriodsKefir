@@ -9,9 +9,9 @@ namespace View.Player
         private PlayerView _view;
         private PlayerActions _actions;
         
-        private void Awake()
+        public void Initialize(PlayerView view)
         {
-            _view = GetComponent<PlayerView>();
+            _view = view;
             _actions = new PlayerActions();
             _actions.Enable();
             _actions.Gameplay.Accelerate.started += ModelStartAcceleration;
@@ -23,6 +23,8 @@ namespace View.Player
 
         private void FixedUpdate()
         {
+            if (_actions == null)
+                return;
             float rotationAxis = _actions.Gameplay.Rotate.ReadValue<float>();
             _view.MovementModel.Rotate(Time.fixedDeltaTime, rotationAxis);
         }
