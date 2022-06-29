@@ -1,6 +1,4 @@
-﻿using System;
-using UnityEngine;
-using Vector2 = System.Numerics.Vector2;
+﻿using Vector2 = System.Numerics.Vector2;
 
 namespace Model
 {

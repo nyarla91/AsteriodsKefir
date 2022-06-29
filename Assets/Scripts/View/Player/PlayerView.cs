@@ -1,5 +1,6 @@
 using Model;
 using UnityEngine;
+using View.UI;
 using SN = System.Numerics;
 
 namespace View.Player
@@ -8,6 +9,8 @@ namespace View.Player
     [RequireComponent(typeof(PlayerUI))]
     public class PlayerView : CollidingView
     {
+        [SerializeField] private GameOverView _gameOver;
+        [Space]
         [Header("Movement")]
         [SerializeField] private float _acceleration = 0.1f;
         [SerializeField] private float _deacceleration = 0.03f;
@@ -16,7 +19,7 @@ namespace View.Player
         [Header("Attack")]
         [SerializeField] private float _cannonPeriod = 0.5f;
         [SerializeField] private int _laserCharges = 3;
-        [Tooltip("Charges/Second")] [SerializeField] private float _laserChargesRestorationSpeed = 0.3f; 
+        [Tooltip("Charges/Second")] [SerializeField] private float _laserChargesRestorationSpeed = 0.3f;
         
         private PlayerInput _input;
         private PlayerUI _ui;
@@ -42,7 +45,7 @@ namespace View.Player
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            
+            _gameOver.Show(ScoreCounter.Instance.Score);
             _attackModel = null;
         }
 

@@ -1,5 +1,5 @@
 {
-    "name": "ViewAssembly",
+    "name": "Asteroids.View",
     "rootNamespace": "",
     "references": [
         "GUID:5624e687195372a439a6adfa4c56ffb3",

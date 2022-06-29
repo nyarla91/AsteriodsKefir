@@ -1,25 +1,26 @@
 ﻿using System.Numerics;
 using Model.Bullets;
-using static Model.ScoreCounterFacade;
 
 namespace Model.Obstacles
 {
     public class UFO : Obstacle, IFixedUpdatable
     {
-        private readonly Transformable _player;
+        private readonly Transformable _target;
         public override string SpritePath => "Sprites/UFO";
         public override int ScoreWorth => 5;
 
         private float _speed = 1.2f;
         
-        public UFO(Vector2 position, float rotation, Transformable player) : base(position, rotation, Vector2.One * 0.5f)
+        public UFO(Vector2 position, float rotation, Transformable target) : base(position, rotation, Vector2.One * 0.5f)
         {
-            _player = player;
+            _target = target;
         }
 
         public void FixedUpdate(float deltaTime)
         {
-            Vector2 moveDirection = (_player.Position - Position).Normalized();
+            if (_target == null)
+                return;
+            Vector2 moveDirection = (_target.Position - Position).Normalized();
             Position += _speed * deltaTime * moveDirection;
         }
 

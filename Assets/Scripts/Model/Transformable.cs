@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using UnityEngine;
 using Vector2 = System.Numerics.Vector2;
 
 namespace Model
@@ -12,6 +11,8 @@ namespace Model
         private Vector2 _scale;
         
         public Action OnDestroy; 
+        
+        protected virtual bool DestroyedOutOfMapBounds => true;
 
         public Vector2 Position
         {
@@ -20,6 +21,8 @@ namespace Model
             {
                 _position = value;
                 OnTransformed?.Invoke(this);
+                if (DestroyedOutOfMapBounds && _position.Length() > 15)
+                    OnDestroy?.Invoke();
             }
         }
 

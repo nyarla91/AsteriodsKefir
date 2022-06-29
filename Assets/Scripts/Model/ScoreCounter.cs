@@ -8,6 +8,8 @@ namespace Model
         public static ScoreCounter Instance => _instance;
 
         private int _score;
+        public int Score => _score;
+        
 
         public event Action<int> OnScoreChanged;
 
