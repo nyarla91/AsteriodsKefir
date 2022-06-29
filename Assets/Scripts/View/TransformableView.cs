@@ -1,5 +1,4 @@
 ﻿using System;
-using Extentions;
 using Model;
 using UnityEngine;
 
@@ -12,16 +11,20 @@ namespace View
         
         private TModel _model;
 
-        protected TModel Model
+        public TModel Model
         {
             get => _model;
-            set
+            protected set
             {
                 if (_model != null)
                     throw new Exception("Model can only be set once");
                 
                 _model = value;
+                if (_model is IFixedUpdatable)
+                    AddUpdatable((IFixedUpdatable) _model);
+                    
                 _model.OnTransformed += ApplyTransform;
+                Model.OnDestroy += () => Destroy(gameObject);
             }
         }
 
@@ -29,6 +32,7 @@ namespace View
         {
             Transform.localPosition = transformable.Position.ToUnityVector();
             Transform.rotation = Quaternion.Euler(0, 0, transformable.Rotation);
+            Transform.localScale =  transformable.Scale.To3().WithZ(1).ToUnityVector();
         }
 
         protected virtual void OnDestroy()

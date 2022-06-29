@@ -1,5 +1,4 @@
-﻿using Extentions;
-using Model.Bullets;
+﻿using Model.Bullets;
 using UnityEngine;
 using View;
 

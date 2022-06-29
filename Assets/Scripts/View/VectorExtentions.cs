@@ -1,7 +1,8 @@
-﻿using UnityEngine;
-using SN = System.Numerics;
+﻿using SN = System.Numerics;
+using Vector2 = UnityEngine.Vector2;
+using Vector3 = UnityEngine.Vector3;
 
-namespace Extentions
+namespace View
 {
     public static class VectorExtentions
     {

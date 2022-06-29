@@ -1,22 +1,36 @@
 ﻿using System;
+using Model.Obstacles;
 using Vector2 = System.Numerics.Vector2;
 
 namespace Model
 {
-    public class PlayerMovement : Transformable, IFixedUpdatable
+    public class Player : Colliding, IFixedUpdatable
     {
-        private float _acceleration;
-        private float _deacceleration;
-        private float _movementSpeed;
-        private float _rotationSpeed;
+        private float _acceleration = 0.1f;
+        private float _deacceleration = 0.03f;
+        private float _movementSpeed = 4;
+        private float _rotationSpeed = 120;
         
         private readonly Vector2 _cameraMaxBounds;
         private readonly Vector2 _cameraMinBounds;
-        
+
+        private bool _isDead;
         private bool _isAccelerating;
         private Vector2 _velocity;
 
-        public PlayerMovement(Vector2 position, float rotation, Vector2 cameraMaxBounds, Vector2 cameraMinBounds) : base(position, rotation)
+        public Vector2 Velocity
+        {
+            get => _velocity;
+            private set
+            {
+                _velocity = value;
+                OnVelocityChanged?.Invoke(value);
+            }
+        }
+
+        public event Action<Vector2> OnVelocityChanged;
+
+        public Player(Vector2 position, float rotation, Vector2 scale, Vector2 cameraMaxBounds, Vector2 cameraMinBounds) : base(position, rotation, scale)
         {
             _cameraMaxBounds = cameraMaxBounds;
             _cameraMinBounds = cameraMinBounds;
@@ -40,13 +54,20 @@ namespace Model
             Move(deltaTime);
         }
 
+        public override void OnCollide(Colliding other)
+        {
+            base.OnCollide(other);
+            if (other is Obstacle)
+                OnDestroy?.Invoke();
+        }
+
         private void Move(float deltaTime)
         {
             float t = _isAccelerating ? _acceleration : _deacceleration;
             Vector2 targetVelocity = _isAccelerating ? (_movementSpeed * deltaTime * Facing) : Vector2.Zero;
-            _velocity = Vector2.Lerp(_velocity, targetVelocity, t);
+            Velocity = Vector2.Lerp(Velocity, targetVelocity, t);
 
-            Position += _velocity;
+            Position += Velocity;
 
             Teleport();
         }

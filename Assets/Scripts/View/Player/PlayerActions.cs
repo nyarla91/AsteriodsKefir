@@ -147,10 +147,10 @@ namespace View.Player
                 {
                     ""name"": """",
                     ""id"": ""f0c4185d-f528-40eb-b29c-2f8c107d50d7"",
-                    ""path"": ""<Keyboard>/space"",
+                    ""path"": ""<Keyboard>/j"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Keyboard"",
                     ""action"": ""CannonShoot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -169,10 +169,10 @@ namespace View.Player
                 {
                     ""name"": """",
                     ""id"": ""e09f56cd-8565-4baf-bd78-43df2363e7d9"",
-                    ""path"": ""<Keyboard>/alt"",
+                    ""path"": ""<Keyboard>/k"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Keyboard"",
                     ""action"": ""LaserShoot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false

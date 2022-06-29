@@ -6,11 +6,17 @@ namespace View
 {
     public class FixedUpdaterView : MonoBehaviour
     {
-        protected List<IFixedUpdatable> fixedUpdatables = new List<IFixedUpdatable>();
+        private List<IFixedUpdatable> _fixedUpdatables = new List<IFixedUpdatable>();
 
+        protected void AddUpdatable(IFixedUpdatable updatableToAdd)
+        {
+            if (!_fixedUpdatables.Contains(updatableToAdd))
+                _fixedUpdatables.Add(updatableToAdd);
+        }
+        
         protected virtual void FixedUpdate()
         {
-            foreach (IFixedUpdatable fixedUpdatable in fixedUpdatables)
+            foreach (IFixedUpdatable fixedUpdatable in _fixedUpdatables)
             {
                 fixedUpdatable?.FixedUpdate(Time.fixedDeltaTime);
             }

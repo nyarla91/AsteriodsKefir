@@ -1,6 +1,6 @@
-﻿using Extentions;
-using Model;
+﻿using Model;
 using UnityEngine;
+using View;
 using View.Player;
 using SN = System.Numerics;
 using Vector3 = UnityEngine.Vector3;
@@ -16,15 +16,16 @@ namespace Strap
         private void Awake()
         {
             SN.Vector2 position = _view.Transform.position.ToSystemVector().To2();
+            SN.Vector2 scale = _view.Transform.localScale.ToSystemVector().To2();
             float rotation = _view.Transform.rotation.eulerAngles.z;
             SN.Vector2 minCameraBounds = _camera.ScreenToWorldPoint(Vector3.zero).ToSystemVector().To2();
             SN.Vector2 maxCameraBounds = _camera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height)).ToSystemVector().To2();
-            PlayerMovement movementModel = new PlayerMovement(position, rotation, maxCameraBounds, minCameraBounds);
+            Player model = new Player(position, rotation, scale, maxCameraBounds, minCameraBounds);
 
-            PlayerAttack attackModel = new PlayerAttack(movementModel);
+            PlayerAttack attackModel = new PlayerAttack(model);
             attackModel.OnShoot += _bulletFactory.InstantiateBullet;
             
-            _view.Initialize(movementModel, attackModel);
+            _view.Initialize(model, attackModel);
         }
     }
 }

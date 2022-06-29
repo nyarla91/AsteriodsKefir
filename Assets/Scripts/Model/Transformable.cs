@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using UnityEngine;
 using Vector2 = System.Numerics.Vector2;
 
@@ -9,6 +10,8 @@ namespace Model
         private float _rotation;
         private Vector2 _position;
         private Vector2 _scale;
+        
+        public Action OnDestroy; 
 
         public Vector2 Position
         {
@@ -29,22 +32,33 @@ namespace Model
                 OnTransformed?.Invoke(this);
             }
         }
-        
-        protected Vector2 Facing
+
+        public Vector2 Scale
         {
-            get
+            get => _scale;
+            set
             {
-                const double DegreesToRadians = Math.PI / 180;
-                return new Vector2((float) Math.Cos(Rotation * DegreesToRadians), (float) Math.Sin(Rotation * DegreesToRadians));
+                _scale = value;
+                OnTransformed?.Invoke(this);
             }
         }
 
+        protected Vector2 Facing => Rotation.DegreesToVector2();
+
         public event Action<Transformable> OnTransformed;
 
-        public Transformable(Vector2 position, float rotation)
+        protected Transformable(Vector2 position, float rotation, Vector2 scale)
         {
             Position = position;
+            Scale = scale;
             Rotation = rotation;
+            ApplyTransform();
+        }
+
+        private async void ApplyTransform()
+        {
+            await Task.Delay(1);
+            OnTransformed?.Invoke(this);
         }
     }
 }

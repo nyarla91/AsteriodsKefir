@@ -1,4 +1,3 @@
-using System;
 using Model;
 using UnityEngine;
 using SN = System.Numerics;
@@ -6,7 +5,8 @@ using SN = System.Numerics;
 namespace View.Player
 {
     [RequireComponent(typeof(PlayerInput))]
-    public class PlayerView : TransformableView<PlayerMovement>
+    [RequireComponent(typeof(PlayerUI))]
+    public class PlayerView : CollidingView
     {
         [Header("Movement")]
         [SerializeField] private float _acceleration = 0.1f;
@@ -19,32 +19,36 @@ namespace View.Player
         [Tooltip("Charges/Second")] [SerializeField] private float _laserChargesRestorationSpeed = 0.3f; 
         
         private PlayerInput _input;
+        private PlayerUI _ui;
         private PlayerAttack _attackModel;
 
         public PlayerAttack AttackModel => _attackModel;
-        public PlayerMovement MovementModel => Model;
+        public new Model.Player Model => (Model.Player) base.Model;
 
-        public void Initialize(PlayerMovement movementModel, PlayerAttack attackModel)
+        public void Initialize(Model.Player model, PlayerAttack attackModel)
         {
-            Model = movementModel;
-            fixedUpdatables.Add(Model);
+            base.Model = model;
             _attackModel = attackModel;
-            fixedUpdatables.Add(attackModel);
+            AddUpdatable(attackModel);
             OnValidate();
 
             _input = GetComponent<PlayerInput>();
             _input.Initialize(this);
+            
+            _ui = GetComponent<PlayerUI>();
+            _ui.Initialize(this);
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
+            
             _attackModel = null;
         }
 
         private void OnValidate()
         {
-            MovementModel?.UpdateStats(_acceleration, _deacceleration, _movementSpeed, _rotationSpeed);
+            Model?.UpdateStats(_acceleration, _deacceleration, _movementSpeed, _rotationSpeed);
             AttackModel?.UpdateStats(_cannonPeriod, _laserCharges, _laserChargesRestorationSpeed);
         }
     }
