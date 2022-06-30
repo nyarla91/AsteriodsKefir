@@ -9,11 +9,11 @@ namespace View.UI
         [SerializeField] private TMP_Text _counter;
         [SerializeField] private string _prefix = "Score: ";
         
-        private ScoreCounter Model => ScoreCounter.Instance;
+        public ScoreCounter Model { get; private set; }
 
         private void Awake()
         {
-            new ScoreCounter();
+            Model = new ScoreCounter();
             Model.OnScoreChanged += UpdateScore;
             UpdateScore(0);
         }

@@ -2,11 +2,14 @@
 using UnityEngine;
 using View;
 using View.Player;
+using View.UI;
 
 namespace Strap
 {
-    public class ObstaclesFactory : FixedUpdaterView
+    public class ObstaclesFactory : MonoBehaviour
     {
+        [SerializeField] private ScoreCounterView _scoreCounter;
+        [SerializeField] private FixedUpdaterView _updater;
         [SerializeField] private PlayerView _playerView;
         [SerializeField] private GameObject _obstaclePrefab;
         [Tooltip("0 - Only Meteors\n1 - Only UFOs")] [Range(0, 1)]
@@ -17,14 +20,15 @@ namespace Strap
         
         private void Start()
         {
-            _model = new ObstaclesSpawner(_playerView.Model);
-            AddUpdatable(_model);
+            _model = new ObstaclesSpawner(_playerView.Model, _scoreCounter.Model);
+            _updater.AddUpdatable(_model);
             _model.OnObstacleSpawned += SpawnObstacle;
             OnValidate();
         }
 
         private void SpawnObstacle(Obstacle obstacle)
         {
+            _updater.AddUpdatable(obstacle);
             ObstacleView view = Instantiate(_obstaclePrefab, obstacle.Position. ToUnityVector(), Quaternion.Euler(0, 0, obstacle.Rotation))
                     .GetComponent<ObstacleView>();
             

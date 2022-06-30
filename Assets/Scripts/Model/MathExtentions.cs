@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Numerics;
+using Vector2 = System.Numerics.Vector2;
+using Vector3 = System.Numerics.Vector3;
 
 namespace Model
 {
@@ -9,11 +10,9 @@ namespace Model
 
         public static Vector3 WithZ(this Vector3 vector, float z) => new Vector3(vector.X, vector.Y, z);
 
-        public static Vector2 DegreesToVector2(this float degrees)
-        {
-            return new Vector2((float) Math.Cos(degrees * DegreesToRadians()), (float) Math.Sin(degrees * DegreesToRadians()));
-        }
-        
+        public static Vector2 DegreesToVector2(this float degrees) =>
+            new Vector2((float) Math.Cos(degrees * DegreesToRadians()), (float) Math.Sin(degrees * DegreesToRadians()));
+
         public static float ToDegrees(this Vector2 vector) => (float) (Math.Atan2(vector.Y, vector.X) * RadiansToDegrees());
         
         public static double DegreesToRadians() => Math.PI / 180;

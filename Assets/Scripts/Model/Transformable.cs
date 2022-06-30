@@ -10,7 +10,7 @@ namespace Model
         private Vector2 _position;
         private Vector2 _scale;
         
-        public Action OnDestroy; 
+        public Action OnDestroy;
         
         protected virtual bool DestroyedOutOfMapBounds => true;
 
@@ -56,6 +56,11 @@ namespace Model
             Scale = scale;
             Rotation = rotation;
             ApplyTransform();
+        }
+
+        protected void MoveForward(float distance)
+        {
+            Position += distance * Facing;
         }
 
         private async void ApplyTransform()

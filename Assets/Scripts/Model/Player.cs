@@ -18,10 +18,10 @@ namespace Model
         private bool _isAccelerating;
         private Vector2 _velocity;
 
-        public Vector2 Velocity
+        private Vector2 Velocity
         {
             get => _velocity;
-            private set
+            set
             {
                 _velocity = value;
                 OnVelocityChanged?.Invoke(value);
@@ -29,6 +29,7 @@ namespace Model
         }
 
         public event Action<Vector2> OnVelocityChanged;
+        public event Action OnHit;
 
         public Player(Vector2 position, float rotation, Vector2 scale, Vector2 cameraMaxBounds, Vector2 cameraMinBounds) : base(position, rotation, scale)
         {
@@ -57,8 +58,11 @@ namespace Model
         public override void OnCollide(Colliding other)
         {
             base.OnCollide(other);
-            if (other is Obstacle)
-                OnDestroy?.Invoke();
+            if (other is not Obstacle)
+                return;
+            
+            OnDestroy?.Invoke();
+            OnHit?.Invoke();
         }
 
         private void Move(float deltaTime)
@@ -79,7 +83,7 @@ namespace Model
             Position = new Vector2(x, y);
         }
 
-        private float LoopCoordinate(float coordinate, float min, float max)
+        private static float LoopCoordinate(float coordinate, float min, float max)
         {
             if (max < min)
                 throw new ArgumentException("Min cannot be more than Max");

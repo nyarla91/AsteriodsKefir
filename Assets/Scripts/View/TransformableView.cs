@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace View
 {
-    public abstract class TransformableView<TModel> : FixedUpdaterView where TModel : Transformable
+    public abstract class TransformableView<TModel> : MonoBehaviour where TModel : Transformable
     {
         private Transform _transform;
         public Transform Transform => _transform ??= transform;
@@ -20,19 +20,22 @@ namespace View
                     throw new Exception("Model can only be set once");
                 
                 _model = value;
-                if (_model is IFixedUpdatable)
-                    AddUpdatable((IFixedUpdatable) _model);
-                    
                 _model.OnTransformed += ApplyTransform;
-                Model.OnDestroy += () => Destroy(gameObject);
+                Model.OnDestroy += DestroyThis;
             }
         }
 
-        public void ApplyTransform(Transformable transformable)
+        private void ApplyTransform(Transformable transformable)
         {
             Transform.localPosition = transformable.Position.ToUnityVector();
             Transform.rotation = Quaternion.Euler(0, 0, transformable.Rotation);
             Transform.localScale =  transformable.Scale.To3().WithZ(1).ToUnityVector();
+        }
+
+        private void DestroyThis()
+        {
+            Model.OnDestroy -= DestroyThis;
+            Destroy(gameObject);
         }
 
         protected virtual void OnDestroy()

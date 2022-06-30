@@ -14,17 +14,17 @@ namespace Model
         private bool _isCannonReady = true;
         private float _laserChargesLeft;
 
-        public float LaserChargesLeft
+        private float LaserChargesLeft
         {
             get => _laserChargesLeft;
-            private set
+            set
             {
                 _laserChargesLeft = value;
                 OnLaserChargesChanged?.Invoke(value);
             }
         }
 
-        private Timer _cannonCooldonwTimer = new Timer(0.5f);
+        private readonly Timer _cannonCooldonwTimer = new Timer(0.5f);
 
         public event Action<Bullet> OnShoot; 
         public event Action<float> OnLaserChargesChanged; 
@@ -61,7 +61,7 @@ namespace Model
             if (LaserChargesLeft < 1)
                 return;
 
-            OnShoot?.Invoke(new LaserBullet(_movement.Position, _movement.Rotation, _movement.Scale));
+            OnShoot?.Invoke(new LaserBullet(_movement));
             LaserChargesLeft -= 1;
         }
 
@@ -70,7 +70,7 @@ namespace Model
             if (!_isCannonReady)
                 return;
             
-            OnShoot?.Invoke(new CannonBullet(_movement.Position, _movement.Rotation, _movement.Scale));
+            OnShoot?.Invoke(new CannonBullet(_movement));
             _isCannonReady = false;
         }
     }

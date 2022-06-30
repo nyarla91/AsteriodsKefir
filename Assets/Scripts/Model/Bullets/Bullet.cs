@@ -9,14 +9,14 @@ namespace Model.Bullets
         protected virtual bool IsDestroyedOnHit => true;
         public abstract string SpritePath { get; }
 
-        protected Bullet(Vector2 position, float rotation, Vector2 scale) : base(position, rotation, scale)
+        protected Bullet(Transformable origin) : base(origin.Position, origin.Rotation, Vector2.One)
         {
             
         }
         
         public void FixedUpdate(float deltaTime)
         {
-            Position += MovementSpeed * deltaTime * Facing;
+            MoveForward(MovementSpeed * deltaTime);
         }
 
         public override void OnCollide(Colliding other)

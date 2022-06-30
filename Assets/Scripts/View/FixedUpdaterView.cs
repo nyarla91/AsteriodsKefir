@@ -4,21 +4,29 @@ using UnityEngine;
 
 namespace View
 {
-    public class FixedUpdaterView : MonoBehaviour
+    public sealed class FixedUpdaterView : MonoBehaviour
     {
-        private List<IFixedUpdatable> _fixedUpdatables = new List<IFixedUpdatable>();
+        private readonly List<IFixedUpdatable> _fixedUpdatables = new List<IFixedUpdatable>();
 
-        protected void AddUpdatable(IFixedUpdatable updatableToAdd)
+        public void AddUpdatable(params IFixedUpdatable[] updatablesToAdd)
         {
-            if (!_fixedUpdatables.Contains(updatableToAdd))
-                _fixedUpdatables.Add(updatableToAdd);
+            foreach (IFixedUpdatable fixedUpdatable in updatablesToAdd)
+            {
+                if (!_fixedUpdatables.Contains(fixedUpdatable))
+                    _fixedUpdatables.Add(fixedUpdatable);
+            }
         }
         
-        protected virtual void FixedUpdate()
+        private void FixedUpdate()
         {
-            foreach (IFixedUpdatable fixedUpdatable in _fixedUpdatables)
+            for (int i = _fixedUpdatables.Count - 1; i >= 0; i--)
             {
-                fixedUpdatable?.FixedUpdate(Time.fixedDeltaTime);
+                if (_fixedUpdatables[i] == null)
+                {
+                    _fixedUpdatables.RemoveAt(i);
+                    continue;
+                }
+                _fixedUpdatables[i].FixedUpdate(Time.fixedDeltaTime);
             }
         }
     }

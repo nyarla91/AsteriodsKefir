@@ -1,5 +1,4 @@
 ﻿using Model.Bullets;
-using Model.Obstacles;
 using UnityEngine;
 
 namespace View

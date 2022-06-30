@@ -6,11 +6,12 @@ namespace Model.Obstacles
 {
     public class ObstaclesSpawner : IFixedUpdatable
     {
-        private Player _player;
+        private readonly Player _player;
+        private readonly ScoreCounter _scoreCounter;
+        private readonly Timer _spawnTimer = new Timer(0.2f);
         private float _ufoSpawnChance = 0.5f;
-        private Timer _spawnTimer = new Timer(0.2f);
         
-        private Vector2 RandomPointInCircle
+        private static Vector2 RandomPointInCircle
         {
             get
             {
@@ -24,9 +25,10 @@ namespace Model.Obstacles
 
         public event Action<Obstacle> OnObstacleSpawned;
 
-        public ObstaclesSpawner(Player player)
+        public ObstaclesSpawner(Player player, ScoreCounter scoreCounter)
         {
             _player = player;
+            _scoreCounter = scoreCounter;
             _spawnTimer.OnExpired += SpawnRandomObstacle;
         }
 
@@ -50,8 +52,8 @@ namespace Model.Obstacles
             float rotation = lookDirection.ToDegrees();
             
             Obstacle obstacle = random.NextDouble() > _ufoSpawnChance 
-                ? new Meteor(position, rotation, this)
-                : new UFO(position, rotation, _player);
+                ? new Meteor(position, rotation, _scoreCounter, this)
+                : new UFO(position, rotation, _player, _scoreCounter);
             SpawnObstacle(obstacle);
         }
 

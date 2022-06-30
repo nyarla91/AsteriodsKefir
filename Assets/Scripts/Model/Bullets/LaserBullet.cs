@@ -8,7 +8,7 @@ namespace Model.Bullets
         protected override bool IsDestroyedOnHit => false;
         public override string SpritePath => "Sprites/LaserBullet";
 
-        public LaserBullet(Vector2 position, float rotation, Vector2 scale) : base(position, rotation, scale)
+        public LaserBullet(Transformable origin) : base(origin)
         {
             
         }

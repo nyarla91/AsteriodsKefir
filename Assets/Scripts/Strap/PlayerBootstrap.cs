@@ -9,6 +9,7 @@ namespace Strap
 {
     public class PlayerBootstrap : MonoBehaviour
     {
+        [SerializeField] private FixedUpdaterView _updater;
         [SerializeField] private Camera _camera;
         [SerializeField] private BulletFactory _bulletFactory;
         [SerializeField] private PlayerView _view;
@@ -24,6 +25,8 @@ namespace Strap
 
             PlayerAttack attackModel = new PlayerAttack(model);
             attackModel.OnShoot += _bulletFactory.InstantiateBullet;
+            
+            _updater.AddUpdatable(model, attackModel);
             
             _view.Initialize(model, attackModel);
         }

@@ -3,20 +3,27 @@ using Model.Bullets;
 
 namespace Model.Obstacles
 {
-    public abstract class Obstacle : Colliding
+    public abstract class Obstacle : Colliding, IFixedUpdatable
     {
+        protected ScoreCounter ScoreCounter { get; }
         public abstract string SpritePath { get; }
-        public abstract int ScoreWorth { get; }
+        protected abstract int ScoreWorth { get; }
 
-        public Obstacle(Vector2 position, float rotation, Vector2 scale) : base(position, rotation, scale)
+        protected Obstacle(Vector2 position, float rotation, Vector2 scale, ScoreCounter scoreCounter) : base(position, rotation, scale)
         {
+            ScoreCounter = scoreCounter;
         }
 
         public override void OnCollide(Colliding other)
         {
             base.OnCollide(other);
             if (other is Bullet)
-                ScoreCounter.Instance.AddScore(ScoreWorth);
+                ScoreCounter.AddScore(ScoreWorth);
+        }
+
+        public virtual void FixedUpdate(float deltaTime)
+        {
+            
         }
     }
 }
